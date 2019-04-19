@@ -1,16 +1,33 @@
+import { PushPipe } from './pipes/push.pipe';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
+import { NgModule, Injector } from '@angular/core';
+import { ExternalDashboardTileComponent } from './external-dashboard-tile/external-dashboard-tile.component';
+import { createCustomElement } from '@angular/elements';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+   imports: [
+      HttpClientModule,
+      BrowserModule
+   ],
+   declarations: [
+       AppComponent,
+       PushPipe,
+       ExternalDashboardTileComponent
+   ],
+   bootstrap: [],
+   entryComponents: [
+       ExternalDashboardTileComponent
+   ]
 })
-export class AppModule { }
+export class AppModule { 
+    constructor(private injector: Injector) {
+    }
+
+    ngDoBootstrap() {
+        const externalTileCE = createCustomElement(ExternalDashboardTileComponent, { injector: this.injector });
+        customElements.define('external-dashboard-tile', externalTileCE);
+    }
+
+}
